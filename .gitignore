@@ -1,0 +1,9 @@
+node_modules/
+*.log
+cred.dat
+state.json
+config.json
+stop.flag
+.tmp/
+.DS_Store
+Thumbs.db
