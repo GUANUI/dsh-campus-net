@@ -1,0 +1,7 @@
+# dsh-campus-net —— 校园网自动登录
+#
+# patch 行的 name 必须等于 package.json 里的真实包名，
+# 否则 loader 会安装成功但挂载不到插件。
+- insert:
+    - id: campus-net
+      name: dsh-campus-net
