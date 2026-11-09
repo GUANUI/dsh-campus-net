@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "dsh-campus-net",
   "version": "0.1.0",
   "description": "Campus network auto-login for DeepSeek Harness: status, on-demand login, a local settings page, and an optional autostart daemon. Ships a Nanjing Audit University portal preset and a configurable JSON-portal mode.",
@@ -12,6 +12,7 @@
     "index.js",
     "lib",
     "bin",
+    "docs",
     "cordis.patch.yml",
     "README.md",
     "README.zh.md",
