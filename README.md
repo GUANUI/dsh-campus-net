@@ -10,7 +10,8 @@ Ships a preset for **Nanjing Audit University (南京审计大学)** and a confi
 
 - **Status at a glance** — online/offline, Wi-Fi SSID, daemon state, last action and last error.
 - **On-demand login** — one tool call, using credentials encrypted on disk.
-- **Local settings page** — account/password, portal address, SSIDs, check interval, autostart. Bound to `127.0.0.1` with a per-run token.
+- **Local settings page** — scan and pick campus Wi-Fi, account/password, portal address, check interval, autostart. Bound to `127.0.0.1` with a per-run token.
+- **First-run guide** — on first load the plugin opens the user guide (five steps, how to find the page again, troubleshooting). It only opens once (`autoOpenGuide: false` disables it). DSH has no install-time popup hook, so this is the closest thing.
 - **Optional background daemon** — a separate Node process, not a child of DSH, so it keeps running after DSH exits. `install` also registers a hidden Startup entry so it comes back after reboot.
 - **No account lockout** — a wrong password is never retried; it stops and reports the portal message.
 
@@ -32,12 +33,23 @@ dsh plugin add link:/absolute/path/to/dsh-campus-net
 
 Restart DSH if the four tools do not appear immediately.
 
+## Guide
+
+The plugin opens this guide on first load. You can also run `campus_net_setup` and click **User guide** at the top of the settings page.
+
+![User guide](docs/guide.png)
+
 ## Setup
 
 1. Ask DSH to run `campus_net_setup`. It returns a `http://127.0.0.1:<port>/?token=…` URL.
-2. Open it and fill in your campus account and password, then **Save**.
-3. Press **Login now** to verify.
-4. Press **Enable autostart** (or run `campus_net_daemon { "action": "install" }`) if you want it to survive reboot.
+2. In **Campus Wi-Fi**, press **Scan nearby Wi-Fi** and tick your campus network (at NAU the free ones are `i-NAU` and `i-NAU-Lib`; `chinanet` / `cmcc` / `unicom` are paid carrier networks and are never auto-connected).
+3. Fill in your campus account and password, then **Save**.
+4. Press **Login now** to verify.
+5. Press **Enable autostart** (or run `campus_net_daemon { "action": "install" }`) if you want it to survive reboot.
+
+> Scanning needs Windows location permission: Settings → Privacy & security → Location, enable location services and desktop app access. You can also type the SSID manually; login still works without the permission.
+
+> With a global proxy or game accelerator running, the portal sees a non-campus source address and login fails with `请重新获取地址!` (please obtain the address again). Quit those tools, or add a direct route to the portal IP, before logging in.
 
 The settings link is valid only while the plugin process is alive. Re-run `campus_net_setup` after restarting DSH.
 
@@ -50,7 +62,7 @@ The `nau` preset is pre-filled:
 | Portal | `http://login.nau.edu.cn` |
 | Login API | `/api/portal/v1/login` |
 | Success | `reply_code === 0` |
-| Wi-Fi | `i-NAU` (fallbacks: `i-NAU-Lib`, `i-NAU-chinanet`, `i-NAU-cmcc`) |
+| Wi-Fi | `i-NAU` (fallback: `i-NAU-Lib`). Carrier networks chinanet / cmcc / unicom are paid and never auto-joined |
 | Online probe | `http://connect.rom.miui.com/generate_204` → HTTP 204 |
 
 Your account is your student ID. The phone number is **not** accepted by this portal.

@@ -1,4 +1,4 @@
-﻿import assert from 'node:assert/strict'
+import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -60,9 +60,17 @@ const html = await page.text()
 ok('page served', page.status === 200 && html.includes('校园网自动登录'))
 const forbidden = await fetch(info.url.replace(/\?token=.*$/, '') + 'api/state')
 ok('api rejects missing token', forbidden.status === 403)
+const scanForbidden = await fetch(info.url.replace(/\?token=.*$/, '') + 'api/scan')
+ok('scan rejects missing token', scanForbidden.status === 403)
 const state = await fetch('http://127.0.0.1:' + info.port + '/api/state?token=' + new URL(info.url).searchParams.get('token'))
 const stateValue = await state.json()
 ok('api/state returns daemon block', state.status === 200 && stateValue.daemon && typeof stateValue.online === 'boolean')
+const guideUrl = info.url.replace('/?token=', '/guide?token=')
+const guide = await fetch(guideUrl)
+const guideHtml = await guide.text()
+ok('guide page served', guide.status === 200 && guideHtml.includes('使用指南') && guideHtml.includes('打开设置页'))
+const anonGuide = await (await fetch(info.url.replace('/?token=', '/guide'))).text()
+ok('guide hides settings token when not authorized', !/token=[0-9a-f]{32}/.test(anonGuide))
 server.close()
 
 console.log('logs')
