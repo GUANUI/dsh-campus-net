@@ -6,7 +6,7 @@ import path from 'node:path'
 const home = path.join(os.tmpdir(), 'cn-smoke-' + Date.now())
 process.env.DSH_CAMPUS_NET_HOME = home
 
-const { normalizeConfig, saveConfig, loadConfig, DEFAULTS } = await import('../lib/config.js')
+const { normalizeConfig, saveConfig, loadConfig, DEFAULTS, createProfile, selectProfile, renameProfile, removeProfile } = await import('../lib/config.js')
 const { buildCampusTools } = await import('../lib/tools.js')
 const { startSetupServer } = await import('../lib/setup-server.js')
 const { saveCred, loadCred } = await import('../lib/creds.js')
@@ -72,6 +72,24 @@ ok('guide page served', guide.status === 200 && guideHtml.includes('使用指南
 const anonGuide = await (await fetch(info.url.replace('/?token=', '/guide'))).text()
 ok('guide hides settings token when not authorized', !/token=[0-9a-f]{32}/.test(anonGuide))
 server.close()
+
+console.log('profiles')
+const cfg0 = loadConfig()
+ok('config stores profiles array', Array.isArray(cfg0.profiles) && cfg0.profiles.length === 1)
+ok('active profile defaults to first', cfg0.activeProfile === cfg0.profiles[0].id)
+const created = createProfile({ name: 'Second Campus' })
+const firstId = created.profiles[0].id
+const secondId = created.profiles[1].id
+ok('createProfile adds and selects', created.profiles.length === 2 && created.activeProfile === secondId)
+await saveCred('20230003', 'pw-three')
+ok('credential saved for active profile', (await loadCred()) && (await loadCred()).username === '20230003')
+selectProfile(firstId)
+const firstCred = await loadCred()
+ok('credentials isolated per profile', firstCred && firstCred.username === '20230002')
+renameProfile(secondId, 'Renamed')
+ok('renameProfile works', loadConfig().profiles.find((p) => p.id === secondId).name === 'Renamed')
+removeProfile(secondId)
+ok('removeProfile falls back to remaining', loadConfig().profiles.length === 1 && loadConfig().activeProfile === firstId)
 
 console.log('logs')
 ok('log tail readable', Array.isArray(readTail(5)))

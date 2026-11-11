@@ -11,6 +11,7 @@ Ships a preset for **Nanjing Audit University (南京审计大学)** and a confi
 - **Status at a glance** — online/offline, Wi-Fi SSID, daemon state, last action and last error.
 - **On-demand login** — one tool call, using credentials encrypted on disk.
 - **Local settings page** — scan and pick campus Wi-Fi, account/password, portal address, check interval, autostart. Bound to `127.0.0.1` with a per-run token.
+- **Multiple campus profiles** — save several setups (your university, an internship campus, a second school), each with its own portal, Wi-Fi and credentials; the daemon uses the selected one.
 - **First-run guide** — on first load the plugin opens the user guide (five steps, how to find the page again, troubleshooting). It only opens once (`autoOpenGuide: false` disables it). DSH has no install-time popup hook, so this is the closest thing.
 - **Optional background daemon** — a separate Node process, not a child of DSH, so it keeps running after DSH exits. `install` also registers a hidden Startup entry so it comes back after reboot.
 - **No account lockout** — a wrong password is never retried; it stops and reports the portal message.
@@ -52,6 +53,10 @@ The plugin opens this guide on first load. You can also run `campus_net_setup` a
 > With a global proxy or game accelerator running, the portal sees a non-campus source address and login fails with `请重新获取地址!` (please obtain the address again). Quit those tools, or add a direct route to the portal IP, before logging in.
 
 The settings link is valid only while the plugin process is alive. Re-run `campus_net_setup` after restarting DSH.
+
+### Multiple campus profiles
+
+The **Campus profile** card stores several setups side by side — for example your own university and a campus you visit occasionally. Each profile keeps its own portal, Wi-Fi list, usernames and saved credentials; switch with the dropdown, use **New** to clone the current one, and **Rename**/**Delete** to manage them. The daemon always uses the selected profile, and switching applies from the next retry.
 
 ### Nanjing Audit University
 
