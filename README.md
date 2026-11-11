@@ -12,6 +12,7 @@ Ships a preset for **Nanjing Audit University (南京审计大学)** and a confi
 - **On-demand login** — one tool call, using credentials encrypted on disk.
 - **Local settings page** — scan and pick campus Wi-Fi, account/password, portal address, check interval, autostart. Bound to `127.0.0.1` with a per-run token.
 - **Multiple campus profiles** — save several setups (your university, an internship campus, a second school), each with its own portal, Wi-Fi and credentials; the daemon uses the selected one.
+- **Prefers campus Wi-Fi** — if the laptop is online through a paid carrier network (`chinanet` / `cmcc` / `unicom`), the daemon switches back only after a scan confirms a configured campus SSID is actually in range; otherwise it leaves the current connection alone. On startup it also sets saved `cmcc` / `unicom` profiles to manual connection so Windows does not fall back to them when the campus network is not reachable. Turn it off with the “Prefer campus Wi-Fi” checkbox.
 - **First-run guide** — on first load the plugin opens the user guide (five steps, how to find the page again, troubleshooting). It only opens once (`autoOpenGuide: false` disables it). DSH has no install-time popup hook, so this is the closest thing.
 - **Optional background daemon** — a separate Node process, not a child of DSH, so it keeps running after DSH exits. `install` also registers a hidden Startup entry so it comes back after reboot.
 - **No account lockout** — a wrong password is never retried; it stops and reports the portal message.
