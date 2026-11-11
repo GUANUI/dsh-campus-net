@@ -62,7 +62,7 @@ The `nau` preset is pre-filled:
 | Portal | `http://login.nau.edu.cn` |
 | Login API | `/api/portal/v1/login` |
 | Success | `reply_code === 0` |
-| Wi-Fi | `i-NAU` (fallback: `i-NAU-Lib`). Carrier networks chinanet / cmcc / unicom are paid and never auto-joined |
+| Wi-Fi | `i-NAU`, `i-NAU-Lib` (both free, tried in order). Carrier networks chinanet / cmcc / unicom are paid and never auto-joined |
 | Online probe | `http://connect.rom.miui.com/generate_204` → HTTP 204 |
 
 Your account is your student ID. The phone number is **not** accepted by this portal.

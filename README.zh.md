@@ -62,7 +62,7 @@ dsh plugin add link:/绝对路径/dsh-campus-net
 | 门户 | `http://login.nau.edu.cn` |
 | 登录接口 | `/api/portal/v1/login` |
 | 成功标志 | `reply_code === 0` |
-| Wi-Fi | 设置页扫描后勾选；南审免费的是 `i-NAU`（备用 `i-NAU-Lib`）；运营商网络 chinanet / cmcc / unicom 收费，不自动连接 |
+| Wi-Fi | 设置页扫描后勾选；南审免费的是 `i-NAU` / `i-NAU-Lib`（都免费，按顺序尝试）；运营商网络 chinanet / cmcc / unicom 收费，不自动连接 |
 | 在线探测 | `http://connect.rom.miui.com/generate_204` 返回 HTTP 204 |
 
 账号是学号；这个门户不接受手机号。
