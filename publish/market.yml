@@ -1,6 +1,6 @@
-﻿url: https://github.com/GUANUI/dsh-campus-net
+url: https://github.com/GUANUI/dsh-campus-net
 name: GUANUI/dsh-campus-net
 category: tools
 description:
   en: "Campus network auto-login for DeepSeek Harness: status check, on-demand login, a token-protected local settings page, and an optional autostart daemon that survives DSH closing. Ships a Nanjing Audit University preset and a configurable JSON-portal mode."
-  zh: "DSH 鏍″洯缃戣嚜鍔ㄧ櫥褰曪細鐘舵€佹煡璇€佹寜闇€鐧诲綍銆佸甫 token 鐨勬湰鍦拌缃〉锛屽彲閫夊紑鏈鸿嚜鍚畧鎶わ紙DSH 鍏抽棴鍚庝粛宸ヤ綔锛夛紱鍐呯疆鍗椾含瀹¤澶у棰勮锛屼篃鏀寔鑷畾涔?JSON 闂ㄦ埛銆?
+  zh: "DSH 校园网自动登录：状态查询、按需登录、带 token 的本地设置页，可选开机自启守护（DSH 关闭后仍工作）；内置南京审计大学预设，也支持自定义 JSON 门户。"

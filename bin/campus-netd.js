@@ -76,4 +76,19 @@ lock.listen({ host: '127.0.0.1', port: cfg.lockPort, exclusive: true }, () => {
       shutdown('收到停止标记')
     }
   }, 2000).unref()
+
+  // 看门狗自身也要有人看着：它一旦被结束，就没人再拉起守护。
+  // 守护活着时每分钟摸一次心跳，超过 90 秒没动静就重新把它启动起来（5 分钟最多一次）。
+  let lastWatchdogKick = 0
+  setInterval(() => {
+    import('../lib/daemon.js')
+      .then(async (m) => {
+        if (m.watchdogAlive()) return
+        if (Date.now() - lastWatchdogKick < 5 * 60 * 1000) return
+        lastWatchdogKick = Date.now()
+        const result = await m.ensureWatchdog()
+        logLine('看门狗自检：' + result.message)
+      })
+      .catch(() => {})
+  }, 60 * 1000).unref()
 })

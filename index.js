@@ -1,30 +1,57 @@
+import { readState } from './lib/engine.js'
+import { daemonStatus, ensureWatchdog, installAutostart, isPaused, startDaemon } from './lib/daemon.js'
+import { maybeOnboard } from './lib/onboarding.js'
 import { buildCampusTools } from './lib/tools.js'
-import { logLine } from './lib/engine.js'
 
-export const name = 'campus-net'
+/**
+ * dsh-campus-net 的宿主半边：注册四个工具，并在插件加载后做一次自检。
+ *
+ * 自检只“修复”，不“新建”：如果用户执行过 uninstall（state.autostartInstalled === false），
+ * 这里什么都不做，避免卸载后重启 DSH 又被装回去。
+ */
 
-/** 只依赖工具注册表；不注入客户端 UI，因此无需浏览器端 bundle。 */
+export const name = 'dsh-campus-net'
 export const inject = ['tools']
 
-export function apply(ctx, config = {}) {
-  const disposers = []
-  for (const tool of buildCampusTools(config)) {
+function warn(ctx, message) {
+  try {
+    ctx.logger?.warn?.(message)
+  } catch {
+    // 记日志失败不能影响插件加载
+  }
+}
+
+export function apply(ctx) {
+  for (const tool of buildCampusTools()) {
     try {
-      const dispose = ctx.tools.register(tool)
-      if (typeof dispose === 'function') disposers.push(dispose)
+      ctx.tools.register(tool)
     } catch (error) {
-      logLine('注册工具 ' + tool.name + ' 失败：' + (error && error.message ? error.message : String(error)))
+      warn(ctx, '[dsh-campus-net] 工具注册失败：' + tool.name + ' · ' + (error && error.message ? error.message : String(error)))
     }
   }
-  logLine('dsh-campus-net 已加载，注册 ' + disposers.length + ' 个工具')
 
-  ctx.on('dispose', () => {
-    for (const dispose of disposers) {
-      try {
-        dispose()
-      } catch {
-        // 卸载失败不应影响其它插件
-      }
+  const timer = setTimeout(() => {
+    selfCheck(ctx).catch((error) => warn(ctx, '[dsh-campus-net] 自检失败：' + (error && error.message ? error.message : String(error))))
+    maybeOnboard().catch(() => {})
+  }, 2500)
+  if (timer && typeof timer.unref === 'function') timer.unref()
+}
+
+async function selfCheck(ctx) {
+  const state = readState()
+  if (state.autostartInstalled === false) return
+  if (isPaused()) return
+  try {
+    const installed = await installAutostart()
+    if (!installed.ok) warn(ctx, '[dsh-campus-net] 自启没装全：' + installed.message)
+    const status = await daemonStatus()
+    if (!status.running) {
+      const started = await startDaemon()
+      if (!started.ok) warn(ctx, '[dsh-campus-net] 守护没起来：' + started.message)
+    } else if (!status.watchdog) {
+      await ensureWatchdog()
     }
-  })
+  } catch (error) {
+    warn(ctx, '[dsh-campus-net] 自检异常：' + (error && error.message ? error.message : String(error)))
+  }
 }

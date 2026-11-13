@@ -26,6 +26,8 @@ ok('lockPort clamped to 65535', normalized.lockPort === 65535)
 ok('bad auth falls back to auto', normalized.auth === 'auto')
 ok('ssids deduped and trimmed', JSON.stringify(normalized.ssids) === JSON.stringify(['i-NAU']))
 ok('portal without scheme falls back', normalized.portal === DEFAULTS.portal)
+ok('preferCampusOverPaid defaults true', normalizeConfig({}).preferCampusOverPaid === true)
+ok('preferCampusOverPaid can be disabled', normalizeConfig({ preferCampusOverPaid: false }).preferCampusOverPaid === false)
 
 const saved = saveConfig({ usernames: ['20230001'], intervalSeconds: 12 })
 ok('saveConfig persists', loadConfig().usernames[0] === '20230001' && loadConfig().intervalSeconds === 12)
