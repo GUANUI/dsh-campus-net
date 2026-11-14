@@ -4,6 +4,21 @@ Campus network auto-login for **DeepSeek Harness (DSH)**. Check whether you are 
 
 Not tied to any school: the portal address, endpoint paths and campus SSIDs are all entered in the settings page. It works with “POST JSON + `reply_code`” style portals.
 
+**Install**
+
+```bash
+dsh plugin --profile web add dsh-campus-net      # from npm
+dsh plugin --profile web add github:GUANUI/dsh-campus-net   # from source
+```
+
+**Check compatibility first.** Only “POST JSON + `reply_code`” portals are supported. Srun (深澜), Dr.COM and Ruijie use different protocols and are **not** supported. After installing, enter your portal URL on the settings page and try one login before enabling the daemon.
+
+| Works | Does not work |
+| --- | --- |
+| Portal answers JSON with `reply_code` | Srun (深澜), Dr.COM, Ruijie |
+| Endpoints `getinfo` / `login` / `logout` / `challenge` (editable) | Portal pages that need a scripted browser jump |
+| Windows 10/11 (Wi-Fi switching, autostart) | Automatic Wi-Fi switching on macOS / Linux |
+
 ## Features
 
 - **Status at a glance** — online/offline, Wi-Fi SSID, daemon state, last action and last error.

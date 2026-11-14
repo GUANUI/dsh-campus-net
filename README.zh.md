@@ -4,6 +4,21 @@
 
 不绑定任何学校：门户地址、接口路径和校园网 SSID 都由你在设置页填写，适用于“POST JSON + `reply_code`”这一类校园网门户。
 
+**一行装好**
+
+```bash
+dsh plugin --profile web add dsh-campus-net      # 从 npm
+dsh plugin --profile web add github:GUANUI/dsh-campus-net   # 从源码
+```
+
+**先确认能不能用**：只支持「POST JSON + `reply_code`」门户。深澜（Srun）、Dr.COM 协议不同，**不支持**。装好后先在设置页填自己的门户地址点一次登录，能登上再开守护。
+
+| 支持 | 不支持 |
+| --- | --- |
+| 门户返回 JSON、用 `reply_code` 表示结果 | 深澜 / Srun、Dr.COM、锐捷 |
+| 接口路径为 `getinfo` / `login` / `logout` / `challenge`（可在设置页改） | 需要 Portal 页面脚本跳转的门户 |
+| Windows 10/11（自动切 Wi-Fi、开机自启） | macOS / Linux 的自动切 Wi-Fi |
+
 ## 功能
 
 - **状态一眼看清**：是否在线、连的哪个 Wi-Fi、守护是否在跑、最近一次动作和错误。

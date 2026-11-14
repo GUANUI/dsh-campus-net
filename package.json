@@ -1,6 +1,6 @@
 {
   "name": "dsh-campus-net",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Campus network auto-login for DeepSeek Harness: status, on-demand login, a local settings page, and an optional autostart daemon. Works with any campus portal that speaks POST-JSON with a reply_code, including Wi-Fi switching between the campus network and hotspots.",
   "type": "module",
   "main": "index.js",
