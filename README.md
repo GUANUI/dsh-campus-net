@@ -2,9 +2,7 @@
 
 Campus network auto-login for **DeepSeek Harness (DSH)**. Check whether you are online, log in on demand, and optionally run a small background daemon that reconnects after sleep, reboot, or a portal timeout — even when DSH is closed.
 
-Ships a preset for **Nanjing Audit University (南京审计大学)** and a configurable JSON-portal mode for similar portals.
-
-![Settings page](docs/settings.png)
+Not tied to any school: the portal address, endpoint paths and campus SSIDs are all entered in the settings page. It works with “POST JSON + `reply_code`” style portals.
 
 ## Features
 
@@ -39,12 +37,10 @@ Restart DSH if the four tools do not appear immediately.
 
 The plugin opens this guide on first load. You can also run `campus_net_setup` and click **User guide** at the top of the settings page.
 
-![User guide](docs/guide.png)
-
 ## Setup
 
 1. Ask DSH to run `campus_net_setup`. It returns a `http://127.0.0.1:<port>/?token=…` URL.
-2. In **Campus Wi-Fi**, press **Scan nearby Wi-Fi** and tick your campus network (at NAU the free ones are `i-NAU` and `i-NAU-Lib`; `chinanet` / `cmcc` / `unicom` are paid carrier networks and are never auto-connected).
+2. In **Campus Wi-Fi**, press **Scan nearby Wi-Fi** and tick your campus network (`chinanet` / `cmcc` / `unicom` are paid carrier networks and are never auto-connected).
 3. Fill in your campus account and password, then **Save**.
 4. Press **Login now** to verify.
 5. Press **Enable autostart** (or run `campus_net_daemon { "action": "install" }`) if you want it to survive reboot.
@@ -59,23 +55,17 @@ The settings link is valid only while the plugin process is alive. Re-run `campu
 
 The **Campus profile** card stores several setups side by side — for example your own university and a campus you visit occasionally. Each profile keeps its own portal, Wi-Fi list, usernames and saved credentials; switch with the dropdown, use **New** to clone the current one, and **Rename**/**Delete** to manage them. The daemon always uses the selected profile, and switching applies from the next retry.
 
-### Nanjing Audit University
+### Your own portal
 
-The `nau` preset is pre-filled:
+Fill in three things on the settings page:
 
-| Field | Value |
+| Field | Notes |
 | --- | --- |
-| Portal | `http://login.nau.edu.cn` |
-| Login API | `/api/portal/v1/login` |
-| Success | `reply_code === 0` |
-| Wi-Fi | `i-NAU`, `i-NAU-Lib` (both free, tried in order). Carrier networks chinanet / cmcc / unicom are paid and never auto-joined |
-| Online probe | `http://connect.rom.miui.com/generate_204` → HTTP 204 |
+| Portal | e.g. `http://portal.yourschool.edu.cn` — the host that serves the login page |
+| Campus Wi-Fi | Scan and tick, or type the SSID manually |
+| Endpoint paths | Defaults are `getinfo` / `login` / `logout` / `challenge`; change them only if your portal differs |
 
-Your account is your student ID. The phone number is **not** accepted by this portal.
-
-### Other portals
-
-Choose **Custom JSON portal** if your portal behaves like the NAU one: JSON over HTTP, a `reply_code` field, and the four endpoints `getinfo` / `login` / `logout` / `challenge`. Adjust the portal URL in the settings page.
+Success is `reply_code === 0`. If your portal names the account field differently (e.g. `user` instead of `username`), change the field name too.
 
 This plugin does **not** implement Srun (深澜) or Dr.COM protocols. Please do not list it as supporting them.
 

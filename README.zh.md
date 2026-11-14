@@ -2,9 +2,7 @@
 
 给 **DeepSeek Harness（DSH）** 用的校园网自动登录插件。可以查看当前是否在线、手动登录，也可以装一个常驻后台的守护进程，在睡眠、重启或门户掉线后自动重连——DSH 关掉也照常工作。
 
-内置**南京审计大学**预设，另外提供可配置的 JSON 门户模式。
-
-![设置页](docs/settings.png)
+不绑定任何学校：门户地址、接口路径和校园网 SSID 都由你在设置页填写，适用于“POST JSON + `reply_code`”这一类校园网门户。
 
 ## 功能
 
@@ -39,12 +37,10 @@ dsh plugin add link:/绝对路径/dsh-campus-net
 
 插件第一次加载会自动打开这份指南；也可以让 DSH 执行 `campus_net_setup`，在设置页顶部点“使用指南”。
 
-![使用指南](docs/guide.png)
-
 ## 配置
 
 1. 让 DSH 执行 `campus_net_setup`，会返回一个 `http://127.0.0.1:<端口>/?token=…` 链接。
-2. 打开后在“校园 Wi-Fi”里点“扫描附近的 Wi-Fi”，勾选你学校的校园网（南审免费的是 `i-NAU` / `i-NAU-Lib`；`chinanet` / `cmcc` / `unicom` 是收费网络，插件不会自动连接）。
+2. 打开后在“校园 Wi-Fi”里点“扫描附近的 Wi-Fi”，勾选你学校的校园网（`chinanet` / `cmcc` / `unicom` 是运营商收费网络，插件不会自动连接）。
 3. 填校园网账号和密码，点“保存账号密码”。
 4. 点“立即登录”验证。
 5. 想让它重启后也生效，点“开启自启”，或执行 `campus_net_daemon { "action": "install" }`。
@@ -59,23 +55,17 @@ dsh plugin add link:/绝对路径/dsh-campus-net
 
 设置页顶部的“校园网方案”可以同时保存多套配置，比如本校和偶尔去的另一个校区。每个方案有独立的门户、Wi-Fi、账号和密码；用下拉框切换，点“新建”复制当前方案，点“重命名”/“删除”管理。守护进程只用当前选中的方案，切换后下一轮重试生效。
 
-### 南京审计大学
+### 适配自己学校的门户
 
-`nau` 预设已经填好：
+在设置页填三样东西：
 
-| 项目 | 值 |
+| 项目 | 说明 |
 | --- | --- |
-| 门户 | `http://login.nau.edu.cn` |
-| 登录接口 | `/api/portal/v1/login` |
-| 成功标志 | `reply_code === 0` |
-| Wi-Fi | 设置页扫描后勾选；南审免费的是 `i-NAU` / `i-NAU-Lib`（都免费，按顺序尝试）；运营商网络 chinanet / cmcc / unicom 收费，不自动连接 |
-| 在线探测 | `http://connect.rom.miui.com/generate_204` 返回 HTTP 204 |
+| 门户地址 | 例如 `http://portal.yourschool.edu.cn`（浏览器打开登录页的那个域名） |
+| 校园 Wi-Fi | 点“扫描”勾选，或手动填 SSID |
+| 接口路径 | 默认 `getinfo` / `login` / `logout` / `challenge`，与学校门户不一致时再改 |
 
-账号是学号；这个门户不接受手机号。
-
-### 其他学校
-
-如果你们学校也是“JSON + `reply_code`”这一套（四个接口 `getinfo` / `login` / `logout` / `challenge`），可以在设置页选“自定义 JSON 门户”，改门户地址即可。
+登录成功按 `reply_code === 0` 判断；字段名不同（比如账号叫 `user` 而不是 `username`）也在设置页改。
 
 本插件**没有**实现深澜（Srun）或 Dr.COM 协议，请不要把它们写成已支持。
 

@@ -1,4 +1,4 @@
-# 发布清单（GitHub + DSH 插件市场）
+﻿# 发布清单（GitHub + DSH 插件市场）
 
 本地代码已经完成并通过测试；下面只差一个公开 GitHub 仓库和一条市场 PR。
 本机没有 git / gh，所以全部走网页操作。
@@ -45,7 +45,7 @@ Select-String -Path package.json -Pattern 'github.com'
 
 仓库首页右侧 **About** → 齿轮：
 
-- Description：`Campus network auto-login for DSH (NAU preset + custom JSON portal)`
+- Description：`Campus network auto-login for DSH (generic JSON portal, no school-specific data)`
 - Topics 加：`dsh-plugin`（必须）、`deepseek-harness`、`campus-network`
 
 ## 5. 提市场 PR（创建满 1 天后）
@@ -61,7 +61,7 @@ Select-String -Path package.json -Pattern 'github.com'
 
 5. 内容用 `publish/market.yml`，把里面的 `OWNER` 换成你的用户名（description 的引号要保留）
 6. Commit，然后 **Contribute → Open pull request**
-7. PR 标题：`Add dsh-campus-net`；描述里写清楚：Windows 校园网自动登录、NAU 预设、自定义 JSON 门户、不实现深澜/Dr.COM
+7. PR 标题：`Add dsh-campus-net`；描述里写清楚：Windows 校园网自动登录、通用 JSON 门户（不内置任何学校信息）、三重自启守护、不实现深澜/Dr.COM
 
 ## 6. 可选：发 npm
 

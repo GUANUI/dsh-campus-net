@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict'
+﻿import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -20,18 +20,18 @@ function ok(name, condition) {
 }
 
 console.log('config')
-const normalized = normalizeConfig({ intervalSeconds: 1, lockPort: 70000, auth: 'nope', ssids: [' i-NAU ', 'i-NAU'], portal: 'login.nau.edu.cn' })
+const normalized = normalizeConfig({ intervalSeconds: 1, lockPort: 70000, auth: 'nope', ssids: [' Campus-WiFi ', 'Campus-WiFi'], portal: 'portal.example.edu.cn' })
 ok('interval clamped to 5', normalized.intervalSeconds === 5)
 ok('lockPort clamped to 65535', normalized.lockPort === 65535)
 ok('bad auth falls back to auto', normalized.auth === 'auto')
-ok('ssids deduped and trimmed', JSON.stringify(normalized.ssids) === JSON.stringify(['i-NAU']))
-ok('portal without scheme falls back', normalized.portal === DEFAULTS.portal)
+ok('ssids deduped and trimmed', JSON.stringify(normalized.ssids) === JSON.stringify(['Campus-WiFi']))
+ok('portal without scheme gets http://', normalized.portal === 'http://portal.example.edu.cn')
 ok('preferCampusOverPaid defaults true', normalizeConfig({}).preferCampusOverPaid === true)
 ok('preferCampusOverPaid can be disabled', normalizeConfig({ preferCampusOverPaid: false }).preferCampusOverPaid === false)
 
 const saved = saveConfig({ usernames: ['20230001'], intervalSeconds: 12 })
 ok('saveConfig persists', loadConfig().usernames[0] === '20230001' && loadConfig().intervalSeconds === 12)
-ok('saveConfig keeps defaults', saved.portal === DEFAULTS.portal)
+ok('saveConfig keeps defaults', saved.portal === '' && saved.preset === 'custom')
 
 console.log('tools')
 const tools = buildCampusTools()
@@ -40,7 +40,7 @@ ok('tool names', JSON.stringify(tools.map((t) => t.name)) === JSON.stringify(['c
 ok('every tool has parameters/output/execute', tools.every((t) => t.parameters && t.output && t.output.schema && typeof t.output.render === 'function' && typeof t.execute === 'function'))
 for (const tool of tools) {
   const rendered = tool.output.render({}, tool.name === 'campus_net_status'
-    ? { online: true, probe: { detail: '在线' }, wifi: { ssid: 'i-NAU' }, daemon: { running: true, pid: 1, autostart: true }, state: {} }
+    ? { online: true, probe: { detail: '在线' }, wifi: { ssid: 'Campus-WiFi' }, daemon: { running: true, pid: 1, autostart: true }, state: {} }
     : tool.name === 'campus_net_login' ? { ok: true, username: '20230002' }
     : tool.name === 'campus_net_setup' ? { ok: true, url: 'http://127.0.0.1:1/?token=x' }
     : { ok: true, message: 'ok' })
